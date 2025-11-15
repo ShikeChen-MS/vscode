@@ -89,6 +89,12 @@
         "enablement": "!operationInProgress"
       },
       {
+        "command": "git.cloneWithScalar",
+        "title": "%command.cloneWithScalar%",
+        "category": "Git",
+        "enablement": "!operationInProgress"
+      },
+      {
         "command": "git.init",
         "title": "%command.init%",
         "category": "Git",
@@ -1134,6 +1140,10 @@
           "when": "config.git.enabled && !git.missing"
         },
         {
+          "command": "git.cloneWithScalar",
+          "when": "config.git.enabled && !git.missing"
+        },
+        {
           "command": "git.init",
           "when": "config.git.enabled && !git.missing && remoteName != 'codespaces'"
         },
@@ -1781,6 +1791,11 @@
           "when": "scmProvider == git"
         },
         {
+          "command": "git.cloneWithScalar",
+          "group": "1_header@3",
+          "when": "scmProvider == git"
+        },
+        {
           "command": "git.checkout",
           "group": "1_header@4",
           "when": "scmProvider == git"
@@ -1856,6 +1871,11 @@
         },
         {
           "command": "git.clone",
+          "group": "1_header@3",
+          "when": "scmProvider == git"
+        },
+        {
+          "command": "git.cloneWithScalar",
           "group": "1_header@3",
           "when": "scmProvider == git"
         },

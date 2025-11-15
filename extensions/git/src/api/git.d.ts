@@ -191,6 +191,11 @@ export interface CloneOptions {
 	ref?: string;
 	recursive?: boolean;
 	/**
+	 * Use Scalar for cloning. Scalar provides faster cloning for large repositories.
+	 * Requires Scalar to be available (bundled with Git for Windows 2.38+).
+	 */
+	useScalar?: boolean;
+	/**
 	 * If no postCloneAction is provided, then the users setting for git.openAfterClone is used.
 	 */
 	postCloneAction?: 'none';

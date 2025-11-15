@@ -1032,6 +1032,22 @@ export class CommandCenter {
 		await this.cloneManager.clone(url, { parentPath, recursive: true });
 	}
 
+	@command('git.cloneWithScalar')
+	async cloneWithScalar(url?: string, parentPath?: string, options?: { ref?: string }): Promise<void> {
+		// Check if scalar is available
+		const scalarAvailable = await this.git.isScalarAvailable();
+		if (!scalarAvailable) {
+			const message = l10n.t('Scalar is not available. Scalar is bundled with Git for Windows 2.38+ and can be installed separately for other systems.');
+			const learnMore = l10n.t('Learn More');
+			const result = await window.showWarningMessage(message, learnMore);
+			if (result === learnMore) {
+				await commands.executeCommand('vscode.open', Uri.parse('https://github.com/microsoft/scalar'));
+			}
+			return;
+		}
+		await this.cloneManager.clone(url, { parentPath, useScalar: true, ...options });
+	}
+
 	@command('git.init')
 	async init(skipFolderPrompt = false): Promise<void> {
 		let repositoryPath: string | undefined = undefined;

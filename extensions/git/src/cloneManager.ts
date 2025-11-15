@@ -19,6 +19,7 @@ export interface CloneOptions {
 	parentPath?: string;
 	ref?: string;
 	recursive?: boolean;
+	useScalar?: boolean;
 	postCloneAction?: ApiPostCloneAction;
 }
 
@@ -55,7 +56,7 @@ export class CloneManager {
 		return this.cloneRepository(url, options.parentPath, options);
 	}
 
-	private async cloneRepository(url: string, parentPath?: string, options: { recursive?: boolean; ref?: string; postCloneAction?: ApiPostCloneAction } = {}): Promise<string | undefined> {
+	private async cloneRepository(url: string, parentPath?: string, options: { recursive?: boolean; ref?: string; useScalar?: boolean; postCloneAction?: ApiPostCloneAction } = {}): Promise<string | undefined> {
 		if (!parentPath) {
 			const config = workspace.getConfiguration('git');
 			let defaultCloneDirectory = config.get<string>('defaultCloneDirectory') || os.homedir();
@@ -94,10 +95,8 @@ export class CloneManager {
 
 			const repositoryPath = await window.withProgress(
 				opts,
-				(progress, token) => this.model.git.clone(url!, { parentPath: parentPath!, progress, recursive: options.recursive, ref: options.ref }, token)
-			);
-
-			await this.doPostCloneAction(repositoryPath, options.postCloneAction);
+				(progress, token) => this.model.git.clone(url!, { parentPath: parentPath!, progress, recursive: options.recursive, ref: options.ref, useScalar: options.useScalar }, token)
+			); await this.doPostCloneAction(repositoryPath, options.postCloneAction);
 
 			return repositoryPath;
 		} catch (err) {
