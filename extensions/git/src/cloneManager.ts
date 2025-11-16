@@ -20,6 +20,7 @@ export interface CloneOptions {
 	ref?: string;
 	recursive?: boolean;
 	useScalar?: boolean;
+	scalarMode?: 'default' | 'full-clone' | 'no-src';
 	postCloneAction?: ApiPostCloneAction;
 }
 
@@ -56,7 +57,7 @@ export class CloneManager {
 		return this.cloneRepository(url, options.parentPath, options);
 	}
 
-	private async cloneRepository(url: string, parentPath?: string, options: { recursive?: boolean; ref?: string; useScalar?: boolean; postCloneAction?: ApiPostCloneAction } = {}): Promise<string | undefined> {
+	private async cloneRepository(url: string, parentPath?: string, options: { recursive?: boolean; ref?: string; useScalar?: boolean; scalarMode?: 'default' | 'full-clone' | 'no-src'; postCloneAction?: ApiPostCloneAction } = {}): Promise<string | undefined> {
 		if (!parentPath) {
 			const config = workspace.getConfiguration('git');
 			let defaultCloneDirectory = config.get<string>('defaultCloneDirectory') || os.homedir();

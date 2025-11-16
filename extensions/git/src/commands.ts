@@ -1045,7 +1045,39 @@ export class CommandCenter {
 			}
 			return;
 		}
-		await this.cloneManager.clone(url, { parentPath, useScalar: true, ...options });
+
+		// Prompt user to choose scalar clone mode
+		const items: (QuickPickItem & { mode?: 'default' | 'full-clone' | 'no-src' })[] = [
+			{
+				label: l10n.t('$(repo-clone) Scalar Clone (Default)'),
+				description: l10n.t('Partial clone optimized for large repos'),
+				detail: l10n.t('Uses blob-less partial clone with sparse-checkout for best performance'),
+				mode: 'default'
+			},
+			{
+				label: l10n.t('$(repo-clone) Scalar Clone (Full)'),
+				description: l10n.t('Full clone with all objects'),
+				detail: l10n.t('Clones all objects but still enables scalar features like background maintenance'),
+				mode: 'full-clone'
+			},
+			{
+				label: l10n.t('$(repo-clone) Scalar Clone (No Source)'),
+				description: l10n.t('Clone without source files'),
+				detail: l10n.t('Initializes the repo without checking out source files (sparse-checkout disabled)'),
+				mode: 'no-src'
+			}
+		];
+
+		const pick = await window.showQuickPick(items, {
+			placeHolder: l10n.t('Select Scalar clone mode'),
+			ignoreFocusOut: true
+		});
+
+		if (!pick) {
+			return;
+		}
+
+		await this.cloneManager.clone(url, { parentPath, useScalar: true, scalarMode: pick.mode || 'default', ...options });
 	}
 
 	@command('git.init')

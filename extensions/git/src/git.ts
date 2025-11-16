@@ -378,6 +378,7 @@ export interface ICloneOptions {
 	readonly recursive?: boolean;
 	readonly ref?: string;
 	readonly useScalar?: boolean;
+	readonly scalarMode?: 'default' | 'full-clone' | 'no-src';
 }
 
 export class Git {
@@ -483,6 +484,15 @@ export class Git {
 			if (options.useScalar) {
 				// Use scalar clone for better performance on large repositories
 				const command = ['scalar', 'clone'];
+
+				// Add scalar mode options
+				if (options.scalarMode === 'full-clone') {
+					command.push('--full-clone');
+				}
+				if (options.scalarMode === 'no-src') {
+					command.push('--no-src');
+				}
+
 				if (options.ref) {
 					command.push('--branch', options.ref);
 				}

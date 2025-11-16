@@ -417,7 +417,7 @@ export class ApiImpl implements API {
 
 	async clone(uri: Uri, options?: CloneOptions): Promise<Uri | null> {
 		const parentPath = options?.parentPath?.fsPath;
-		const result = await this.#cloneManager.clone(uri.toString(), { parentPath, recursive: options?.recursive, ref: options?.ref, useScalar: options?.useScalar, postCloneAction: options?.postCloneAction });
+		const result = await this.#cloneManager.clone(uri.toString(), { parentPath, recursive: options?.recursive, ref: options?.ref, useScalar: options?.useScalar, scalarMode: options?.scalarMode, postCloneAction: options?.postCloneAction });
 		return result ? Uri.file(result) : null;
 	}
 
