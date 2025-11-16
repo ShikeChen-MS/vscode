@@ -1046,38 +1046,34 @@ export class CommandCenter {
 			return;
 		}
 
-		// Prompt user to choose scalar clone mode
-		const items: (QuickPickItem & { mode?: 'default' | 'full-clone' | 'no-src' })[] = [
+		// Prompt user to choose scalar clone options (can select multiple)
+		const items: (QuickPickItem & { option?: 'full-clone' | 'no-src' })[] = [
 			{
-				label: l10n.t('$(repo-clone) Scalar Clone (Default)'),
-				description: l10n.t('Partial clone optimized for large repos'),
-				detail: l10n.t('Uses blob-less partial clone with sparse-checkout for best performance'),
-				mode: 'default'
+				label: l10n.t('$(file-binary) Full Clone'),
+				description: l10n.t('--full-clone'),
+				detail: l10n.t('Clone all objects (no partial clone)'),
+				option: 'full-clone'
 			},
 			{
-				label: l10n.t('$(repo-clone) Scalar Clone (Full)'),
-				description: l10n.t('Full clone with all objects'),
-				detail: l10n.t('Clones all objects but still enables scalar features like background maintenance'),
-				mode: 'full-clone'
-			},
-			{
-				label: l10n.t('$(repo-clone) Scalar Clone (No Source)'),
-				description: l10n.t('Clone without source files'),
-				detail: l10n.t('Initializes the repo without checking out source files (sparse-checkout disabled)'),
-				mode: 'no-src'
+				label: l10n.t('$(file-code) No Source'),
+				description: l10n.t('--no-src'),
+				detail: l10n.t('Initialize without checking out source files'),
+				option: 'no-src'
 			}
 		];
 
-		const pick = await window.showQuickPick(items, {
-			placeHolder: l10n.t('Select Scalar clone mode'),
+		const picks = await window.showQuickPick(items, {
+			placeHolder: l10n.t('Select Scalar clone options (leave empty for default partial clone)'),
+			canPickMany: true,
 			ignoreFocusOut: true
 		});
 
-		if (!pick) {
+		if (picks === undefined) {
 			return;
 		}
 
-		await this.cloneManager.clone(url, { parentPath, useScalar: true, scalarMode: pick.mode || 'default', ...options });
+		const scalarOptions = picks.map(p => p.option).filter((opt): opt is 'full-clone' | 'no-src' => !!opt);
+		await this.cloneManager.clone(url, { parentPath, useScalar: true, scalarOptions, ...options });
 	}
 
 	@command('git.init')

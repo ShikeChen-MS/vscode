@@ -196,12 +196,14 @@ export interface CloneOptions {
 	 */
 	useScalar?: boolean;
 	/**
-	 * Scalar clone mode:
-	 * - 'default': Partial clone with blob-less objects and sparse-checkout (recommended)
-	 * - 'full-clone': Full clone with all objects
+	 * Scalar clone options (can be combined):
+	 * - 'full-clone': Clone all objects (no partial clone)
 	 * - 'no-src': Initialize repo without checking out source files
+	 *
+	 * If empty or undefined, uses default partial clone with sparse-checkout.
+	 * Options can be combined, e.g., ['full-clone', 'no-src']
 	 */
-	scalarMode?: 'default' | 'full-clone' | 'no-src';
+	scalarOptions?: ('full-clone' | 'no-src')[];
 	/**
 	 * If no postCloneAction is provided, then the users setting for git.openAfterClone is used.
 	 */
